@@ -7,11 +7,19 @@ namespace Tests
 	{
 		static void Main()
 		{
-			var result = Parser.Parse("testcommand --arg1 param1 -arg2 param2");
-			Console.WriteLine($"COMMAND: {result.Command}");
-			foreach (var e in result.Arguments)
+			while (true)
 			{
-				Console.WriteLine($"ARGUMENT: {e.Key}, VALUE: {e.Value}");
+				var result = Parser.Parse(Console.ReadLine());
+
+				Console.WriteLine($"COMMAND: {result.Command}");
+				foreach (var e in result.Arguments)
+				{
+					Console.WriteLine($"ARGUMENT: {e.Key}, VALUE: {e.Value}");
+				}
+				foreach (var e in result.OneShots)
+				{
+					Console.WriteLine($"ONESHOT: {e}");
+				}
 			}
 		}
 	}

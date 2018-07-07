@@ -17,12 +17,22 @@ namespace CommandLineHelper
 		    {
 			    if (args[i].StartsWith("--"))
 			    {
-				    context.Arguments.Add(args[i].Substring(2), args[i+1]);
+					if (i + 1 == args.Length ||
+					    args[i + 1].StartsWith("--") ||
+					    args[i + 1].StartsWith("-"))
+						context.OneShots.Add(args[i].Substring(2));
+
+				    else context.Arguments.Add(args[i].Substring(2), args[i + 1]);
 			    }
 
 				else if (args[i].StartsWith("-"))
 			    {
-				    context.Arguments.Add(args[i].Substring(1), args[i+1]);
+				    if (i + 1 == args.Length ||
+				        args[i + 1].StartsWith("--") ||
+				        args[i + 1].StartsWith("-"))
+					    context.OneShots.Add(args[i].Substring(1));
+
+				    else context.Arguments.Add(args[i].Substring(1), args[i + 1]);
 			    }
 		    }
 
