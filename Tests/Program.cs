@@ -13,12 +13,21 @@ namespace Tests
 				{
 					Run = a =>
 					{
-						
-						Config.TextWriter.WriteLine(a.Value);
+						var output = a.Value;
+						if (a.OneShotEnabled("e|exclaim"))
+							output += "!";
+
+						for (var i = 0; i < Convert.ToInt32(a.GetOptionParam("r|repeat")); i++)
+							Config.TextWriter.WriteLine(output);
 					},
 					OptionSet = new OptionSet
 					{
-						new Option("r|repeat", "The amount of times to repeat the value.")
+						new Option("r|repeat", "TIMES", "The amount of times to repeat the value.")
+						{
+							Default = "1",
+							Optional = true
+						},
+						new Option("e|exclaim", "Add an exclamation point in the end.")
 					}
 				}
 			};
