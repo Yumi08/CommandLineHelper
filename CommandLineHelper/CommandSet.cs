@@ -82,6 +82,9 @@ namespace CommandLineHelper
 
 		public void Run(InputContext icontext)
 		{
+			if (icontext == null)
+				return;
+
 			var command = this.FirstOrDefault(c => c.Name == icontext.Command);
 
 			if (command == null)

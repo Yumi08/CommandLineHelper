@@ -7,7 +7,10 @@ namespace CommandLineHelper
     {
 		[Pure]
 	    public static InputContext Parse(string input)
-	    {
+		{
+			if (string.IsNullOrEmpty(input))
+				return null;
+
 			var context = new InputContext();
 		    var args = input.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
 

@@ -20,7 +20,7 @@ namespace Tests
 						for (var i = 0; i < Convert.ToInt32(a.GetOptionParam("r|repeat")); i++)
 							Config.TextWriter.WriteLine(output);
 					},
-					OptionSet = new OptionSet
+					OptionSet = new OptionSet()
 					{
 						new Option("r|repeat", "TIMES", "The amount of times to repeat the value.")
 						{
@@ -28,6 +28,28 @@ namespace Tests
 							Optional = true
 						},
 						new Option("e|exclaim", "Add an exclamation point in the end.")
+					}
+				},
+				new Command("add", "Add two numbers")
+				{
+					Run = a =>
+					{
+
+						Config.TextWriter.WriteLine(
+							Convert.ToInt32(a.GetOptionParam("n1|number-1")) +
+							Convert.ToInt32(a.GetOptionParam("n2|number-2"))
+							);
+					},
+					OptionSet = new OptionSet()
+					{
+						new Option("n1|number-1", "NUMBER", "The first number to be added.")
+						{
+							Optional = false
+						},
+						new Option("n2|number-2", "NUMBER", "The second number to be added.")
+						{
+							Optional = false
+						}
 					}
 				}
 			};
