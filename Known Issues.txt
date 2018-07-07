@@ -1,0 +1,1 @@
+- The user can mark a OneShot style option to be required. Except it'll still think you didn't enter it because it looks for the parameter.
