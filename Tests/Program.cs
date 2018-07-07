@@ -7,19 +7,20 @@ namespace Tests
 	{
 		static void Main()
 		{
+			var set = new CommandSet
+			{
+				new Command
+				{
+					Name = "echo",
+					Run = a => Console.WriteLine(a.Value)
+				}
+			};
+
 			while (true)
 			{
 				var result = Parser.Parse(Console.ReadLine());
 
-				Console.WriteLine($"COMMAND: {result.Command}");
-				foreach (var e in result.Arguments)
-				{
-					Console.WriteLine($"ARGUMENT: {e.Key}, VALUE: {e.Value}");
-				}
-				foreach (var e in result.OneShots)
-				{
-					Console.WriteLine($"ONESHOT: {e}");
-				}
+				set.Run(result);
 			}
 		}
 	}
