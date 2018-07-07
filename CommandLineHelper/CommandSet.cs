@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -22,13 +23,51 @@ namespace CommandLineHelper
 					Name = defaultHelpCommandName,
 					Run = a =>
 					{
-						foreach (var c in this)
+						if (string.IsNullOrEmpty(a.Value))
+							foreach (var c in this)
+							{
+								if (!string.IsNullOrEmpty(c.HelpText))
+									Config.TextWriter.WriteLine($"\t{c.Name}\t{c.HelpText}");
+							}
+
+						else
 						{
-							if (!string.IsNullOrEmpty(c.HelpText))
-								Config.TextWriter.WriteLine($"\t{c.Name}\t{c.HelpText}");
+							// If the command doesn't exist, tell the user.
+							if (this.All(c => c.Name != a.Value))
+							{
+								Config.TextWriter.WriteLine(OnUnknownCommand);
+								return;
+							}
+
+							// Don't let the user call the help command
+							if (a.Value == defaultHelpCommandName)
+							{
+								Config.TextWriter.WriteLine($"'{defaultHelpCommandName}' allows you to see info on commands.");
+								return;
+							}
+
+							var command = this.First(c => c.Name == a.Value);
+
+							Config.TextWriter.WriteLine($"\t{command.HelpText}");
+
+							foreach (var o in command.OptionSet)
+							{
+								var helpText = o.HelpText ?? "";
+								helpText = helpText != null ? $"\t{helpText}\t" : "\t";
+								Config.TextWriter.WriteLine($"\t\t{o.Name}{helpText}Required: {!o.Optional}");
+							}
 						}
 					}
 				});
+		}
+
+		public new void Add(Command item)
+		{
+			// Prevents duplicate commands.
+			if (this.Count(c => c.Name == item.Name) > 0)
+				throw new DuplicateNameException();
+
+			base.Add(item);
 		}
 
 		public string OnUnknownCommand { get; set; }
@@ -37,9 +76,6 @@ namespace CommandLineHelper
 
 		public void Run(CommandContext context)
 		{
-			if (this.Count(c => c.Name == context.Command) > 1)
-				throw new DuplicateNameException();
-
 			var command = this.FirstOrDefault(c => c.Name == context.Command);
 
 			if (command == null)

@@ -27,7 +27,7 @@
 
 		public string LongForm => Name.Split('|')[1];
 
-		public bool Optional { get; set; }
+		public bool Optional { get; set; } = true;
 
 		public string HelpText { get; set; }
 	}

@@ -21,6 +21,9 @@ namespace CommandLineHelper
 					    break;
 				    context.Value += args[x] + " ";
 			    }
+
+				// Removes the last space found after the value.
+			    context.Value = context.Value.Substring(0, context.Value.Length - 1);
 		    }
 
 		    for (var i = 1; i < args.Length; i++)

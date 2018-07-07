@@ -9,14 +9,14 @@ namespace Tests
 		{
 			var set = new CommandSet
 			{
-				new Command("Echo", "Repeats whatever value is passed in.")
+				new Command("echo", "Repeats whatever value is passed in.")
 				{
 					Run = a => Config.TextWriter.WriteLine(a.Value),
 					OptionSet = new OptionSet
 					{
-						new Option("m|mul")
+						new Option("r|repeat", "The amount of times to repeat the value.")
 					}
-				},
+				}
 			};
 
 			while (true)
