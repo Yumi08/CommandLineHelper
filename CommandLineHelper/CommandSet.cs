@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
@@ -25,7 +26,7 @@ namespace CommandLineHelper
 							foreach (var c in this)
 							{
 								if (!string.IsNullOrEmpty(c.HelpText))
-									Config.TextWriter.WriteLine($"\t{c.Name}\t{c.HelpText}");
+									Config.TextWriter.WriteLine($"\t{c.Name}    {c.HelpText}");
 							}
 
 						else
@@ -59,8 +60,8 @@ namespace CommandLineHelper
 			foreach (var o in command.OptionSet)
 			{
 				var helpText = o.HelpText;
-				helpText = helpText != null ? $"\t{helpText}\t" : "\t";
-				var paramType = " " + o.ParamType ?? "";
+				helpText = helpText != null ? $"    {helpText}    " : "    ";
+				var paramType = o.ParamType ?? "";
 				Config.TextWriter.WriteLine($"\t\t{o.Name}{paramType}{helpText}Required: {!o.Optional}");
 			}
 		}
@@ -94,7 +95,7 @@ namespace CommandLineHelper
 			var ccontext = ConvertIContextToCContext(icontext, command);
 
 			if (ccontext != null)
-				command.Run.Invoke(ccontext);
+				command.Run?.Invoke(ccontext);
 		}
 
 		private CommandContext ConvertIContextToCContext(InputContext icontext, Command command)
@@ -127,7 +128,11 @@ namespace CommandLineHelper
 
 			foreach (var os in icontext.OneShots)
 			{
-				if (command.OptionSet == null) break;
+				if (command.OptionSet == null)
+				{
+					PrintHelpOnCommand(command);
+					return null;
+				}
 
 				if (command.OptionSet.All(o => o.ShortForm != os && o.LongForm != os))
 				{

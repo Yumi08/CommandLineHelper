@@ -9,7 +9,7 @@ namespace Tests
 		{
 			var set = new CommandSet
 			{
-				new Command("egg", "Prints egg.")
+				new Command("egg", "Prints out egg.")
 				{
 					Run = c =>
 					{
@@ -27,7 +27,8 @@ namespace Tests
 						new Option("t|twice", "Says egg twice."),
 						new Option("e|exclaim", "Makes it exclaim egg!")
 					}
-				}
+				},
+				new Command("wearing", "Test help text.")
 			};
 
 			while (true)
