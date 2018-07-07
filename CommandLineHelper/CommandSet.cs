@@ -7,26 +7,33 @@ namespace CommandLineHelper
 {
 	public class CommandSet : List<Command>
 	{
-		public CommandSet(string helpCommandName = "help")
+		public CommandSet(bool useDefaultHelpCommand = true, string defaultHelpCommandName = "help")
 		{
-			HelpCommandName = helpCommandName;
-			Add(new Command
-			{
-				Name = helpCommandName,
-				Run = a =>
+			OnUnknownCommand = "Unknown command!";
+
+			if (useDefaultHelpCommand)
+				OnUnknownCommand += $" Please type '{defaultHelpCommandName}' for command details.";
+
+			DefaultHelpCommandName = defaultHelpCommandName;
+
+			if (useDefaultHelpCommand)
+				Add(new Command
 				{
-					foreach (var c in this)
+					Name = defaultHelpCommandName,
+					Run = a =>
 					{
-						if (!string.IsNullOrEmpty(c.HelpText))
-						Config.TextWriter.WriteLine($"\t{c.Name}\t{c.HelpText}");
+						foreach (var c in this)
+						{
+							if (!string.IsNullOrEmpty(c.HelpText))
+								Config.TextWriter.WriteLine($"\t{c.Name}\t{c.HelpText}");
+						}
 					}
-				}
-			});
+				});
 		}
 
-		public string OnUnknownCommand => $"Unknown command! Please type '{HelpCommandName}' for command details.";
+		public string OnUnknownCommand { get; set; }
 
-		public string HelpCommandName { get; set; }
+		public string DefaultHelpCommandName { get; set; }
 
 		public void Run(CommandContext context)
 		{

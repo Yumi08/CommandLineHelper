@@ -23,8 +23,6 @@ namespace Tests
 
 				set.Run(result);
 			}
-
-
 		}
 	}
 }
