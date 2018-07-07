@@ -9,56 +9,32 @@ namespace Tests
 		{
 			var set = new CommandSet
 			{
-				new Command("echo", "Repeats whatever value is passed in.")
+				new Command("egg", "Prints egg.")
 				{
-					Run = a =>
+					Run = c =>
 					{
-						var output = a.Value;
-						if (a.OneShotEnabled("e|exclaim"))
+						var output = "egg";
+						if (c.OneShotEnabled("t|twice"))
+							output += " egg";
+
+						if (c.OneShotEnabled("e|exclaim"))
 							output += "!";
 
-						for (var i = 0; i < Convert.ToInt32(a.GetOptionParam("r|repeat")); i++)
-							Config.TextWriter.WriteLine(output);
+						Console.WriteLine(output);
 					},
 					OptionSet = new OptionSet()
 					{
-						new Option("r|repeat", "TIMES", "The amount of times to repeat the value.")
-						{
-							Default = "1",
-							Optional = true
-						},
-						new Option("e|exclaim", "Add an exclamation point in the end.")
-					}
-				},
-				new Command("add", "Add two numbers")
-				{
-					Run = a =>
-					{
-
-						Config.TextWriter.WriteLine(
-							Convert.ToInt32(a.GetOptionParam("n1|number-1")) +
-							Convert.ToInt32(a.GetOptionParam("n2|number-2"))
-							);
-					},
-					OptionSet = new OptionSet()
-					{
-						new Option("n1|number-1", "NUMBER", "The first number to be added.")
-						{
-							Optional = false
-						},
-						new Option("n2|number-2", "NUMBER", "The second number to be added.")
-						{
-							Optional = false
-						}
+						new Option("t|twice", "Says egg twice."),
+						new Option("e|exclaim", "Makes it exclaim egg!")
 					}
 				}
 			};
 
 			while (true)
 			{
-				var result = Parser.Parse(Console.ReadLine());
+				var input = Parser.Parse(Console.ReadLine());
 
-				set.Run(result);
+				set.Run(input);
 			}
 		}
 	}
