@@ -6,9 +6,9 @@ namespace CommandLineHelper
     public static class Parser
     {
 		[Pure]
-	    public static CommandContext Parse(string input)
+	    public static InputContext Parse(string input)
 	    {
-			var context = new CommandContext();
+			var context = new InputContext();
 		    var args = input.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
 
 		    context.Command = args[0];

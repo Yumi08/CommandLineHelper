@@ -11,7 +11,11 @@ namespace Tests
 			{
 				new Command("echo", "Repeats whatever value is passed in.")
 				{
-					Run = a => Config.TextWriter.WriteLine(a.Value),
+					Run = a =>
+					{
+						
+						Config.TextWriter.WriteLine(a.Value);
+					},
 					OptionSet = new OptionSet
 					{
 						new Option("r|repeat", "The amount of times to repeat the value.")

@@ -39,26 +39,31 @@ namespace CommandLineHelper
 								return;
 							}
 
-							// Don't let the user call the help command
+							// Special exception for calling 'help help'
 							if (a.Value == defaultHelpCommandName)
 							{
 								Config.TextWriter.WriteLine($"'{defaultHelpCommandName}' allows you to see info on commands.");
 								return;
 							}
 
-							var command = this.First(c => c.Name == a.Value);
-
-							Config.TextWriter.WriteLine($"\t{command.HelpText}");
-
-							foreach (var o in command.OptionSet)
-							{
-								var helpText = o.HelpText ?? "";
-								helpText = helpText != null ? $"\t{helpText}\t" : "\t";
-								Config.TextWriter.WriteLine($"\t\t{o.Name}{helpText}Required: {!o.Optional}");
-							}
+							PrintHelpOnCommand(a.Command);
 						}
 					}
 				});
+		}
+
+		private void PrintHelpOnCommand(string commandName)
+		{
+			var command = this.First(c => c.Name == commandName);
+
+			Config.TextWriter.WriteLine($"\t{command.HelpText}");
+
+			foreach (var o in command.OptionSet)
+			{
+				var helpText = o.HelpText;
+				helpText = helpText != null ? $"\t{helpText}\t" : "\t";
+				Config.TextWriter.WriteLine($"\t\t{o.Name}{helpText}Required: {!o.Optional}");
+			}
 		}
 
 		public new void Add(Command item)
@@ -74,9 +79,9 @@ namespace CommandLineHelper
 
 		public string DefaultHelpCommandName { get; set; }
 
-		public void Run(CommandContext context)
+		public void Run(InputContext icontext)
 		{
-			var command = this.FirstOrDefault(c => c.Name == context.Command);
+			var command = this.FirstOrDefault(c => c.Name == icontext.Command);
 
 			if (command == null)
 			{
@@ -84,7 +89,44 @@ namespace CommandLineHelper
 				return;
 			}
 
-			command.Run.Invoke(context);
+			var ccontext = ConvertIContextToCContext(icontext, command);
+
+			if (ccontext != null)
+				command.Run.Invoke(ccontext);
+		}
+
+		private CommandContext ConvertIContextToCContext(InputContext icontext, Command command)
+		{
+			var ccontext = new CommandContext
+			{
+				Command = icontext.Command,
+				Value = icontext.Value
+			};
+
+			foreach (var a in icontext.Arguments)
+			{
+				// If a non-existent option is attempted to be used, show command help.
+				if (command.OptionSet.All(o => o.ShortForm != a.Key && o.LongForm != a.Key))
+				{
+					PrintHelpOnCommand(icontext.Command);
+					return null;
+				}
+
+				ccontext.Arguments.Add(command.OptionSet.First(o => o.ShortForm == a.Key || o.LongForm == a.Key), a.Value);
+			}
+
+			foreach (var os in icontext.OneShots)
+			{
+				if (command.OptionSet.All(o => o.ShortForm != os && o.LongForm != os))
+				{
+					PrintHelpOnCommand(icontext.Command);
+					return null;
+				}
+
+				ccontext.OneShots.Add(command.OptionSet.First(o => o.ShortForm == os || o.LongForm == os));
+			}
+
+			return ccontext;
 		}
 	}
 }
