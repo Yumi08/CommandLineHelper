@@ -12,8 +12,9 @@ namespace Tests
 				new Command
 				{
 					Name = "echo",
-					Run = a => Console.WriteLine(a.Value)
-				}
+					Run = a => Config.TextWriter.WriteLine(a.Value),
+					HelpText = "Writes a value to console."
+				},
 			};
 
 			while (true)
@@ -22,6 +23,8 @@ namespace Tests
 
 				set.Run(result);
 			}
+
+
 		}
 	}
 }
