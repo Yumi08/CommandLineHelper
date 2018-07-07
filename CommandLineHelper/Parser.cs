@@ -13,7 +13,7 @@ namespace CommandLineHelper
 
 		    context.Command = args[0];
 
-		    if (!args[1].StartsWith("-") && !args[1].StartsWith("--"))
+		    if (args.Length > 1 && !args[1].StartsWith("-") && !args[1].StartsWith("--"))
 		    {
 			    for (var x = 1; x < args.Length; x++)
 			    {
