@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="Command.cs" />
     <Compile Include="CommandContext.cs" />
+    <Compile Include="CommandMaster.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="CommandSet.cs" />
     <Compile Include="Option.cs" />

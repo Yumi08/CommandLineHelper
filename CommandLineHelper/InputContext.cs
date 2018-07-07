@@ -4,6 +4,8 @@ namespace CommandLineHelper
 {
 	public class InputContext
 	{
+		public string Set { get; set; }
+
 		public string Command { get; set; }
 
 		/// <summary>

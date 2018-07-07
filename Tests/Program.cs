@@ -7,35 +7,43 @@ namespace Tests
 	{
 		static void Main()
 		{
-			var set = new CommandSet
+			var master = new CommandMaster()
 			{
-				new Command("egg", "Prints out egg.")
+				new CommandSet("general", "General commands.")
 				{
-					Run = c =>
+					new Command("egg", "Prints out egg.")
 					{
-						var output = "egg";
-						if (c.OneShotEnabled("t|twice"))
-							output += " egg";
+						Run = c =>
+						{
+							var output = "egg";
+							if (c.OneShotEnabled("t|twice"))
+								output += " egg";
 
-						if (c.OneShotEnabled("e|exclaim"))
-							output += "!";
+							if (c.OneShotEnabled("e|exclaim"))
+								output += "!";
 
-						Console.WriteLine(output);
+							Console.WriteLine(output);
+						},
+						OptionSet = new OptionSet()
+						{
+							new Option("t|twice", "Says egg twice."),
+							new Option("e|exclaim", "Makes it exclaim egg!")
+						}
 					},
-					OptionSet = new OptionSet()
-					{
-						new Option("t|twice", "Says egg twice."),
-						new Option("e|exclaim", "Makes it exclaim egg!")
-					}
+					new Command("wearing", "Test help text.")
 				},
-				new Command("wearing", "Test help text.")
+				new CommandSet("texttools")
+				{
+					new Command("echo", "Repeats the entered value.")
+					{
+						Run = c => { Console.WriteLine(c.Value); }
+					}
+				}
 			};
 
 			while (true)
 			{
-				var input = Parser.Parse(Console.ReadLine());
-
-				set.Run(input);
+				master.ParseAndRun(Console.ReadLine());
 			}
 		}
 	}

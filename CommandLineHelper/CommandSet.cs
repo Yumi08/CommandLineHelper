@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
@@ -7,8 +6,12 @@ namespace CommandLineHelper
 {
 	public class CommandSet : List<Command>
 	{
-		public CommandSet(bool useDefaultHelpCommand = true, string defaultHelpCommandName = "help")
+		public CommandSet(string name, string info = null, bool useDefaultHelpCommand = true, string defaultHelpCommandName = "help")
 		{
+			Name = name;
+
+			Info = info;
+
 			OnUnknownCommand = "Unknown command!";
 
 			if (useDefaultHelpCommand)
@@ -51,6 +54,21 @@ namespace CommandLineHelper
 				});
 		}
 
+		public string Name { get; set; }
+
+		public string Info { get; set; }
+
+		public string OnUnknownCommand { get; set; }
+
+		public string DefaultHelpCommandName { get; set; }
+
+		/// <summary>
+		/// Whether this set contains the passed in command or not.
+		/// </summary>
+		/// <param name="name"></param>
+		/// <returns></returns>
+		public bool HasCommand(string name) => this.Any(c => c.Name == name);
+
 		private void PrintHelpOnCommand(Command command)
 		{
 			Config.TextWriter.WriteLine($"\t{command.HelpText}");
@@ -74,10 +92,6 @@ namespace CommandLineHelper
 
 			base.Add(item);
 		}
-
-		public string OnUnknownCommand { get; set; }
-
-		public string DefaultHelpCommandName { get; set; }
 
 		public void Run(InputContext icontext)
 		{
