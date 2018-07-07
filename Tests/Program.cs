@@ -9,11 +9,13 @@ namespace Tests
 		{
 			var set = new CommandSet
 			{
-				new Command
+				new Command("Echo", "Repeats whatever value is passed in.")
 				{
-					Name = "echo",
 					Run = a => Config.TextWriter.WriteLine(a.Value),
-					HelpText = "Writes a value to console."
+					OptionSet = new OptionSet
+					{
+						new Option("m|mul")
+					}
 				},
 			};
 
