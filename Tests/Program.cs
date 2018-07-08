@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using CommandLineHelper;
 
 namespace Tests
@@ -7,36 +8,38 @@ namespace Tests
 	{
 		static void Main()
 		{
-			var master = new CommandMaster()
+			var master = new CommandMaster
 			{
-				new CommandSet("general", "General commands.")
+				new CommandSet("main")
 				{
-					new Command("egg", "Prints out egg.")
+					new Command("run", "Runs a program.")
 					{
 						Run = c =>
 						{
-							var output = "egg";
-							if (c.OneShotEnabled("t|twice"))
-								output += " egg";
-
-							if (c.OneShotEnabled("e|exclaim"))
-								output += "!";
-
-							Console.WriteLine(output);
-						},
-						OptionSet = new OptionSet()
-						{
-							new Option("t|twice", "Says egg twice."),
-							new Option("e|exclaim", "Makes it exclaim egg!")
+							switch (c.Value.ToLower())
+							{
+								case "chrome":
+									Process.Start("chrome.exe");
+									break;
+							}
 						}
-					},
-					new Command("wearing", "Test help text.")
+					}
 				},
-				new CommandSet("texttools")
+				new CommandSet("debug")
 				{
-					new Command("echo", "Repeats the entered value.")
+					new Command("run", "Runs the debug.")
 					{
-						Run = c => { Console.WriteLine(c.Value); }
+						Run = c =>
+						{
+							if (c.OneShotEnabled("t|twice"))
+								Console.WriteLine("We are debugging!");
+
+							Console.WriteLine("We are debugging!");
+						},
+						OptionSet = new OptionSet
+						{
+							new Option("t|twice")
+						}
 					}
 				}
 			};
