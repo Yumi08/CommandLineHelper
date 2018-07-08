@@ -8,7 +8,8 @@ namespace CommandLineHelper
 	{
 		public new void Add(Option item)
 		{
-			if (this.Count(c => c.ShortForm == item.ShortForm || c.LongForm == item.LongForm) > 0)
+			if (this.Count(c => c.ShortForm == item.ShortForm || c.LongForm == item.LongForm ||
+			                    c.ShortForm == item.LongForm || c.LongForm == item.ShortForm) > 0)
 				throw new DuplicateNameException();
 
 			base.Add(item);

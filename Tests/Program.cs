@@ -31,14 +31,15 @@ namespace Tests
 					{
 						Run = c =>
 						{
-							if (c.OneShotEnabled("t|twice"))
+							if (c.OneShotEnabled("tee"))
 								Console.WriteLine("We are debugging!");
 
 							Console.WriteLine("We are debugging!");
 						},
 						OptionSet = new OptionSet
 						{
-							new Option("t|twice")
+							new Option("tee"),
+							new Option("t|tee")
 						}
 					}
 				}

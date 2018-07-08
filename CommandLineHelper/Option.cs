@@ -34,7 +34,16 @@
 
 		public string ShortForm => Name.Split('|')[0];
 
-		public string LongForm => Name.Split('|')[1];
+		public string LongForm
+		{
+			get
+			{
+				if (Name.Contains("|"))
+					return Name.Split('|')[1];
+
+				return null;
+			}
+		}
 
 		public bool Optional { get; set; } = true;
 
